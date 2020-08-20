@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "server": "nodemon index.js",
     "test": "cross-env DB_ENV=testing jest --watch --runInBand"
   },
   "jest": {
@@ -26,6 +25,7 @@
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "dotenv": "^8.2.0",
     "jest": "^26.4.0",
     "nodemon": "^2.0.3",
     "supertest": "^4.0.2"
