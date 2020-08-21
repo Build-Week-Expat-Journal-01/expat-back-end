@@ -1,6 +1,6 @@
 # Web API Endpoints Documentation
 
-## Login/Register
+## 1. Login/Register
 
 Endpoints for users register and log in.
 
@@ -20,32 +20,62 @@ The resources for both user's registration and user's log in
 #### Endpoint:
 
 ```sh
-/api/auth/register
+POST /api/auth/register
+URL: https://build-week-expat-journal-1.herokuapp.com/api/auth/register
 ```
 
-#### URL:
+#### Request
 
 ```sh
-https://build-week-expat-journal-1.herokuapp.com/api/auth/register
-```
-
-#### Request (JSON Object)
-
-```sh
+request object:
 { 
-  "username": string(128),
-  "password": string
+  username: string(128),
+  password: string
 }
 ```
 
-#### Response (Object)
+#### Response
 
+Success: 
 ```sh
+statusCode: 401
+response object:
 { 
   status: 'success',
   message: `Registered Successfully. Welcome, ${username}.`
 }
 ```
 
+Fail: 
+```sh
+1.
+statusCode: 401
+response object:
+{ 
+  status: 'fail',
+  message: 'Invalid input fields.'
+}
+desc: one or more required key/value of the request object are missing. Ex: username field is missing in the request.
+
+2.
+statusCode: 401
+response object:
+{ 
+  status: 'fail',
+  message: 'The username is no more than 128 characters.'
+}
+desc: request fail if the username field is more than 128 charaters.
+```
+
+Error: 
+```sh
+statusCode: 500
+response object:
+{ 
+  status: 'error',
+  message: 'Internal Server Error.'
+}
+desc: all server-side errors that make the request unsuccessfully.
+```
 
 
