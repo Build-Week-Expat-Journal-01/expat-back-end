@@ -21,6 +21,6 @@ server.use('/', (req, res) => {
 });
 
 // global error controller
-server.use("/", errorController);
+server.use(errorController);
 
 module.exports = server;

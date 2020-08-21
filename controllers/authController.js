@@ -8,13 +8,6 @@ const catchAsync = require('../utils/catchAsync');
 exports.register = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    res.status(401).json({
-      status: 'fail',
-      message: 'Invalid input fields.'
-    })
-  }
-
   const hash = bcrypt.hashSync(password);
   let user = {};
   user.username = username;
@@ -31,13 +24,6 @@ exports.register = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    res.status(401).json({
-      status: 'fail',
-      message: 'Invalid username or password.'
-    })
-  }
-
   const found = await User.findBy(username);
 
   if (found && bcrypt.compareSync(password, found.password)) {
@@ -48,8 +34,9 @@ exports.login = catchAsync(async (req, res, next) => {
       token
     })
   } else {
-    res.status(401).json({
+    next({
       status: 'fail',
+      statusCode: 401,
       message: 'Invalid username or password.'
     })
   }
@@ -64,9 +51,10 @@ exports.authenticate = (req, res, next) => {
   if (token) {
     jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
       if (err) {
-        res.status(401).json({
+        next({
           status: 'fail',
-          message: 'Token is invalid.'
+          statusCode: 403,
+          message: 'You are not authorized.'
         })
       } else {
         req.decodedJwt = decodedToken;
@@ -74,9 +62,10 @@ exports.authenticate = (req, res, next) => {
       }
     })
   } else {
-    res.status(401).json({
+    next({
       status: 'fail',
-      message: 'Token is not included.'
+      statusCode: 403,
+      message: 'You are not authorized.'
     })
   }
 }
