@@ -17,7 +17,7 @@ The resources for both user's registration and user's log in
 
 ### Register
 
-#### Endpoint:
+#### Endpoint
 
 ```sh
 POST /api/auth/register
@@ -36,8 +36,8 @@ request object:
 
 #### Response
 
-success: 
 ```sh
+success:
 statusCode: 201
 response object:
 { 
@@ -45,9 +45,9 @@ response object:
   message: `Registered Successfully. Welcome, ${username}.`
 }
 ```
-
-fail: 
+ 
 ```sh
+fail:
 1.
 statusCode: 400
 response object:
@@ -55,7 +55,8 @@ response object:
   status: 'fail',
   message: 'Invalid input fields.'
 }
-desc: one or more required key/value of the request object are missing. Ex: username field is missing in the request.
+desc: one or more required key/value of the request object are missing. 
+Ex: username field is missing.
 
 2.
 statusCode: 400
@@ -67,8 +68,73 @@ response object:
 desc: request fail when the username field is more than 128 charaters.
 ```
 
-error: 
 ```sh
+error:
+statusCode: 500
+response object:
+{ 
+  status: 'error',
+  message: 'Internal Server Error.'
+}
+desc: all server-side errors that make the request unsuccessfully.
+```
+
+### Login
+
+#### Endpoint
+
+```sh
+POST /api/auth/login
+URL: https://build-week-expat-journal-1.herokuapp.com/api/auth/login
+```
+
+#### Request
+
+```sh
+request object:
+{ 
+  username: string(128),
+  password: string
+}
+```
+
+#### Response
+ 
+```sh
+success:
+statusCode: 200
+response object:
+{ 
+  status: 'success',
+  message: `Welcome, ${username}.`,
+  token
+}
+```
+
+```sh
+fail:
+1.
+statusCode: 401
+response object:
+{ 
+  status: 'fail',
+  message: 'Invalid username or password.'
+}
+desc: username or password are incorrect.
+
+2.
+statusCode: 400
+response object:
+{ 
+  status: 'fail',
+  message: 'Invalid input fields.'
+}
+desc: one or more required key/value of the request object are missing. 
+Ex: username field is missing.
+```
+ 
+```sh
+error:
 statusCode: 500
 response object:
 { 
