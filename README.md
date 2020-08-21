@@ -36,9 +36,9 @@ request object:
 
 #### Response
 
-Success: 
+success: 
 ```sh
-statusCode: 401
+statusCode: 201
 response object:
 { 
   status: 'success',
@@ -46,10 +46,10 @@ response object:
 }
 ```
 
-Fail: 
+fail: 
 ```sh
 1.
-statusCode: 401
+statusCode: 400
 response object:
 { 
   status: 'fail',
@@ -58,16 +58,16 @@ response object:
 desc: one or more required key/value of the request object are missing. Ex: username field is missing in the request.
 
 2.
-statusCode: 401
+statusCode: 400
 response object:
 { 
   status: 'fail',
   message: 'The username is no more than 128 characters.'
 }
-desc: request fail if the username field is more than 128 charaters.
+desc: request fail when the username field is more than 128 charaters.
 ```
 
-Error: 
+error: 
 ```sh
 statusCode: 500
 response object:
