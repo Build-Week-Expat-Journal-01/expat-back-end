@@ -16,8 +16,8 @@ function findById(id) {
   return db('photos').where({ id }).first();
 }
 
-function add(photo) {
-  return db('photos').insert(photo);
+function add(photos) {
+  return db('photos').insert(photos);
 }
 
 function update(id, photo) {
@@ -28,4 +28,8 @@ function update(id, photo) {
 
 function remove(id) {
   return db('photos').where({ id }).del();
+}
+
+function removeByStoryId(story_id) {
+  return db('photos').where({ story_id }).del();
 }

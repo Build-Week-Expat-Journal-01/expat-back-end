@@ -2,6 +2,9 @@ exports.up = function(knex) {
   return knex.schema.createTable('stories', stories => {
     stories.increments();
     stories
+      .string('title')
+      .notNullable();
+    stories
       .string('teaser')
       .notNullable();
     stories

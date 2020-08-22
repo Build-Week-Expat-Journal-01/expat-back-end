@@ -18,7 +18,7 @@ router
 router
   .route('/:id/photos')
   .get(authController.authenticate, storyController.readPhotos)
-  .post(authController.authenticate, storyController.addPhoto)
+  .post(authController.authenticate, storyController.addPhotos)
 
 router
   .route('/:id/photos/:pid')

@@ -39,6 +39,7 @@ exports.updateStory = catchAsync(async (req, res, next) => {
 })
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
+  await Photo.removeByStoryId(req.params.id);
   const result = await Story.remove(req.params.id);
 
   res.status(204).json({
@@ -47,12 +48,12 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.addPhoto = catchAsync(async (req, res, next) => {
-  const newPhoto = await Photo.add(req.body);
+exports.addPhotos = catchAsync(async (req, res, next) => {
+  const newPhotos = await Photo.add(req.body.photos);
 
   res.status(201).json({
     status: 'success',
-    photo: newPhoto
+    photos: newPhotos
   })
 })
 
