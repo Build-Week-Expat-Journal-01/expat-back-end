@@ -1,9 +1,12 @@
-
 exports.up = function(knex) {
   return knex.schema.createTable('photos', photos => {
     photos.increments();
     photos
-      .string('image_url')
+      .text('image_url')
+      .unique()
+      .notNullable();
+    photos
+      .text('desc')
       .notNullable();
     photos
       .integer('story_id').unsigned().notNullable();

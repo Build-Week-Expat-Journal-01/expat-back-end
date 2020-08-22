@@ -1,9 +1,11 @@
-
 exports.up = function(knex) {
   return knex.schema.createTable('stories', stories => {
     stories.increments();
     stories
-      .string('content')
+      .string('teaser')
+      .notNullable();
+    stories
+      .text('content')
       .notNullable();
     stories
       .integer('user_id').unsigned().notNullable();
