@@ -170,13 +170,7 @@ response object:
 { 
   status: 'success',
   photos: [
-    {
-      id: number,
-      image_url: string,
-      desc: string,
-      story_id: number
-    }
-    ...
+    id
   ]  
 }
 ```
