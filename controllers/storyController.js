@@ -3,8 +3,17 @@ const Photo = require('../models/photoModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.addStory = catchAsync(async (req, res, next) => {
-  const newStory = await Story.add(req.body);
+  const { photos, ...restOfTheBody } = req.body;
 
+  const newStory = await Story.add(restOfTheBody);
+
+  if (photos) {
+    const newPhotos = photos.map(photo => {
+      return { ...photo, story_id: newStory[0] }
+    })
+    await Photo.add(newPhotos);
+  }
+ 
   res.status(201).json({
     status: 'success',
     story: newStory
@@ -13,6 +22,12 @@ exports.addStory = catchAsync(async (req, res, next) => {
 
 exports.readStories = catchAsync(async (req, res, next) => {
   const stories = await Story.find();
+
+  if (stories.length > 0) {
+    for (let i = 0; i < stories.length; i++) {
+      stories[i].photos = await Photo.findByStoryId(stories[i].id)
+    }
+  }
 
   res.status(200).json({
     status: 'success',
@@ -30,11 +45,15 @@ exports.readStoryById = catchAsync(async (req, res, next) => {
 })
 
 exports.updateStory = catchAsync(async (req, res, next) => {
-  const updatedStory = await Story.update(req.params.id, req.body);
+  const { photos, ...restOfTheBody } = req.body;
+
+  await Story.update(req.params.id, restOfTheBody);
+
+  const story = await Story.findById(req.params.id);
 
   res.status(200).json({
     status: 'success',
-    story: updatedStory
+    story
   })
 })
 

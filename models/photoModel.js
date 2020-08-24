@@ -3,9 +3,11 @@ const db = require('../data/dbConfig');
 module.exports = {
   find,
   findById,
+  findByStoryId,
   add,
   update,
-  remove
+  remove,
+  removeByStoryId
 }
 
 function find() {
@@ -14,6 +16,10 @@ function find() {
 
 function findById(id) {
   return db('photos').where({ id }).first();
+}
+
+function findByStoryId(id) {
+  return db('photos').where('story_id', id);
 }
 
 function add(photos) {

@@ -3,7 +3,6 @@ exports.up = function(knex) {
     photos.increments();
     photos
       .text('image_url')
-      .unique()
       .notNullable();
     photos
       .text('desc')
@@ -11,7 +10,10 @@ exports.up = function(knex) {
     photos
       .integer('story_id').unsigned().notNullable();
     photos
-      .foreign('story_id').references('id').inTable('stories');
+      .foreign('story_id')
+      .references('id')
+      .inTable('stories')
+      .onDelete();
   });
 };
 

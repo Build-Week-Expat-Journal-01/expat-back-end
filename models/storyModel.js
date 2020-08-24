@@ -21,9 +21,7 @@ function add(story) {
 }
 
 function update(id, story) {
-  return db('stories').where({ id }).update({
-    content: story.content
-  });
+  return db('stories').where({ id }).update(story);
 }
 
 function remove(id) {
