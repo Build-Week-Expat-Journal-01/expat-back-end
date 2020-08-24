@@ -24,7 +24,7 @@ POST /api/auth/register
 URL: https://build-week-expat-journal-1.herokuapp.com/api/auth/register
 ```
 
-#### Request
+#### Request Body
 
 request object:
 ```sh
@@ -54,13 +54,13 @@ POST /api/auth/login
 URL: https://build-week-expat-journal-1.herokuapp.com/api/auth/login
 ```
 
-#### Request
+#### Request Body
 
 request object:
 ```sh
 { 
   username: string(128),
-  password: string
+  password: string(255)
 }
 ```
 
@@ -110,7 +110,7 @@ POST /api/stories
 URL: https://build-week-expat-journal-1.herokuapp.com/api/stories
 ```
 
-#### Request
+#### Request Body
 
 request object:
 ```sh
@@ -118,49 +118,18 @@ request object:
   title: string 225,
   teaser: string 255,
   content: text,
-  user_id: number
-}
-```
-
-#### Response (Success)
-
-statusCode: 201
-response object:
-```sh
-{ 
-  status: 'success',
-  story: [
-    id
-  ]
-}
-```
-
-### Create Photo(s)
-
-#### Endpoint
-
-```sh
-POST /api/stories/:id/photos
-URL: https://build-week-expat-journal-1.herokuapp.com/api/stories/:id/photos
-
-Note: :id is placeholder of a story id where photo will be created.
-```
-
-#### Request
-
-request object:
-```sh
-{
+  user_id: unsigned integer,
   photos: [
     { 
       image_url: string,
       desc: string,
-      story_id: number
+      story_id: unsigned integer
     }
     ...
   ]
 }
 ```
+'photos' object is optional.
 
 #### Response (Success)
 
@@ -168,9 +137,173 @@ statusCode: 201
 response object:
 ```sh
 { 
-  status: 'success',
-  photos: [
+  "status": "success",
+  "story": [
     id
-  ]  
+  ]
+}
+```
+'id' is the id of the story just created.
+
+### Read Stories
+
+#### Endpoint
+
+```sh
+GET /api/stories
+URL: https://build-week-expat-journal-1.herokuapp.com/api/stories
+```
+
+#### Request Body
+
+request object: None
+
+#### Response (Success)
+
+statusCode: 201
+response object sample:
+```sh
+{
+  "status": "success",
+  "stories": [
+    {
+      "id": 6,
+      "title": "The Journal Title",
+      "teaser": "It’s been smoky here lately...",
+      "content": "Content of the stories is here.",
+      "user_id": 1,
+      "photos": [
+        {
+          "id": 9,
+          "image_url": "https://build-week-expat-journal-01.com/01.jpg",
+          "desc": "picture 01",
+          "story_id": 6
+        },
+        {
+          "id": 10,
+          "image_url": "https://build-week-expat-journal-01.com/02.jpg",
+          "desc": "picture 02",
+          "story_id": 6
+        }
+      ]
+    },
+    ...
+  ]
+}
+```
+
+### Read a Story By Id
+
+#### Endpoint
+
+```sh
+GET /api/stories/:id
+URL: https://build-week-expat-journal-1.herokuapp.com/api/stories/:id
+```
+':id' is story id
+
+#### Request Body
+
+request object: None
+
+#### Response (Success)
+
+statusCode: 201
+response object sample:
+```sh
+{
+  "status": "success",
+  "story": {
+    "id": 6,
+    "title": "The Journal Title",
+    "teaser": "It’s been smoky here lately...",
+    "content": "Content of the stories is here.",
+    "user_id": 1,
+    "photos": [
+      {
+        "id": 9,
+        "image_url": "https://build-week-expat-journal-01.com/01.jpg",
+        "desc": "picture 01",
+        "story_id": 6
+      },
+      {
+        "id": 10,
+        "image_url": "https://build-week-expat-journal-01.com/02.jpg",
+        "desc": "picture 02",
+        "story_id": 6
+      }
+    ]
+  }
+```
+
+### Update a Story By Id
+
+#### Endpoint
+
+```sh
+PUT /api/stories/:id
+URL: https://build-week-expat-journal-1.herokuapp.com/api/stories/:id
+```
+':id' is story id
+
+#### Request Body
+
+request object:
+```sh
+{ 
+  "title": sting,
+  "teaser": sting,
+  "content": text,
+  "user_id": unsigned integer
+}
+```
+
+#### Response (Success)
+
+statusCode: 200
+response object sample:
+```sh
+{
+  "status": "success",
+  "story": {
+    "id": 6,
+    "title": "The Journal Title Updated",
+    "teaser": "It’s been smoky here lately...",
+    "content": "Content of the stories is here.",
+    "user_id": 1
+  }
+}
+```
+
+### Delete a Story By Id
+
+#### Endpoint
+
+```sh
+DELETE /api/stories/:id
+URL: https://build-week-expat-journal-1.herokuapp.com/api/stories/:id
+```
+':id' is story id
+
+#### Request Body
+
+request object:
+```sh
+{ 
+  "title": sting,
+  "teaser": sting,
+  "content": text,
+  "user_id": unsigned integer
+}
+```
+
+#### Response (Success)
+
+statusCode: 200
+response object sample:
+```sh
+{
+  "status": "success",
+  "message": "The story and its photos have been deleled."
 }
 ```
