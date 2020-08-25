@@ -307,3 +307,41 @@ response object sample:
   "message": "The story and its photos have been deleled."
 }
 ```
+
+### Create photos by Story Id
+
+#### Endpoint
+
+```sh
+POST /api/stories/6/photos
+URL: https://build-week-expat-journal-1.herokuapp.com/api/stories/:id/photos
+```
+':id' is a story Id
+
+#### Request Body
+
+request object:
+```sh
+[
+  { 
+    image_url: string,
+    desc: string,
+    story_id: unsigned integer
+  }
+  ...
+]
+```
+
+#### Response (Success)
+
+statusCode: 201
+response object:
+```sh
+{ 
+  "status": "success",
+  "photos": [
+    id
+  ]
+}
+```
+'id' is the id of the photo just created.

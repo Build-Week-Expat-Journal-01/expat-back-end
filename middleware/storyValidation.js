@@ -13,9 +13,9 @@ function invalidPhotoFields(photo) {
 }
 
 exports.validateReq = catchAsync(async (req, res, next) => {
-  const { title, teaser, content, user_id, photos } = req.body
+  const { title, teaser, content, photos } = req.body
 
-  if (!title || !teaser || !content || !user_id) {
+  if (!title || !teaser || !content) {
     next({
       status: 'fail',
       statusCode: 400,
@@ -33,17 +33,7 @@ exports.validateReq = catchAsync(async (req, res, next) => {
       req.body.photos = false;
     }
 
-    const user = await User.findById(user_id)
-
-    if (!user) {
-      next({
-        status: 'fail',
-        statusCode: 400,
-        message: 'User is not existed.'
-      });
-    } else {
-      next();
-    }
+    next();
   }
 })
 
@@ -61,4 +51,5 @@ exports.validateStoryId = catchAsync(async (req, res, next) => {
       message: 'Story is not found.'
     })
   }
-})
+});
+

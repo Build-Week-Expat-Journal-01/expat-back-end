@@ -2,7 +2,7 @@ const Photo = require('../models/photoModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.addPhotos = catchAsync(async (req, res, next) => {
-  const newPhotos = await Photo.add(req.body.photos);
+  const newPhotos = await Photo.add(req.body);
 
   res.status(201).json({
     status: 'success',

@@ -2,6 +2,7 @@ const express = require('express');
 const storyController = require('../controllers/storyController');
 const authController = require('../controllers/authController');
 const storyValidation = require('../middleware/storyValidation');
+const photoController = require('../controllers/photoController');
 
 const router = express.Router();
 
@@ -35,12 +36,17 @@ router
 
 router
   .route('/:id/photos')
-  .get(authController.authenticate, storyController.readPhotos)
-  .post(authController.authenticate, storyController.addPhotos)
+  .get(authController.authenticate, photoController.readPhotos)
+  .post(
+    authController.authenticate, 
+    storyValidation.validateStoryId,
+    photoController.addPhotos
+  );
 
 router
   .route('/:id/photos/:pid')
-  .get(authController.authenticate, storyController.readPhotoById)
-  .delete(authController.authenticate, storyController.deletePhoto);
+  .get(authController.authenticate, photoController.readPhotoById)
+  .put(authController.authenticate, photoController.updatePhoto)
+  .delete(authController.authenticate, photoController.deletePhoto);
 
 module.exports = router;

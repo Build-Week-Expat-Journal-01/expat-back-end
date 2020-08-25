@@ -21,7 +21,9 @@ exports.addStory = catchAsync(async (req, res, next) => {
 })
 
 exports.readStories = catchAsync(async (req, res, next) => {
-  const stories = await Story.find();
+  const { subject } = req.decodedJwt;
+
+  const stories = await Story.find(subject);
 
   if (stories.length > 0) {
     for (let i = 0; i < stories.length; i++) {
@@ -37,6 +39,8 @@ exports.readStories = catchAsync(async (req, res, next) => {
 
 exports.readStoryById = catchAsync(async (req, res, next) => {
   const story = await Story.findById(req.params.id);
+  
+  if (story) story.photos = await Photo.findByStoryId(story.id)
 
   res.status(200).json({
     status: 'success',
@@ -67,48 +71,6 @@ exports.deleteStory = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.addPhotos = catchAsync(async (req, res, next) => {
-  const newPhotos = await Photo.add(req.body.photos);
 
-  res.status(201).json({
-    status: 'success',
-    photos: newPhotos
-  })
-})
 
-exports.readPhotos = catchAsync(async (req, res, next) => {
-  const photos = await Photo.find();
-
-  res.status(200).json({
-    status: 'success',
-    photos
-  })
-})
-
-exports.readPhotoById = catchAsync(async (req, res, next) => {
-  const photo = await Photo.findById(req.params.pid);
-
-  res.status(200).json({
-    status: 'success',
-    photo
-  })
-})
-
-exports.updatePhoto = catchAsync(async (req, res, next) => {
-  const updatedPhoto = await Photo.update(req.params.pid, req.body);
-
-  res.status(200).json({
-    status: 'success',
-    photo: updatedPhoto
-  })
-})
-
-exports.deletePhoto = catchAsync(async (req, res, next) => {
-  const result = await Photo.remove(req.params.pid);
-
-  res.status(204).json({
-    status: 'success',
-    result
-  })
-})
 

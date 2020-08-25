@@ -15,10 +15,20 @@ server.use(express.json());
 server.use('/api/auth', authRouter);
 server.use('/api/stories', storyRouter);
 
-// the root route or no routes found
-server.use('/', (req, res) => {
-  res.json({ message: 'Build Week: Expat Journal 1.' })
-});
+// all other routes are not found
+server.all('*', (req, res, next) => {
+  if (req.originalUrl === '/') {
+    res.json({
+      message: "Build Week: Expat Journal 1."
+    })
+  } else {
+    next({
+      status: 'fail',
+      statusCode: 404,
+      message: `Can't find ${req.originalUrl} on the server.`
+    });
+  }
+})
 
 // global error controller
 server.use(errorController);

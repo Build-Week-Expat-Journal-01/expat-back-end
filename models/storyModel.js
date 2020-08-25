@@ -8,8 +8,8 @@ module.exports = {
   remove
 }
 
-function find() {
-  return db('stories');
+function find(user_id) {
+  return db('stories').where({ user_id });
 }
 
 function findById(id) {
