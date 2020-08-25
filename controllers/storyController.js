@@ -3,7 +3,10 @@ const Photo = require('../models/photoModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.addStory = catchAsync(async (req, res, next) => {
+  const { subject } = req.decodedJwt;
   const { photos, ...restOfTheBody } = req.body;
+
+  restOfTheBody.user_id = subject;
 
   const newStory = await Story.add(restOfTheBody);
 
