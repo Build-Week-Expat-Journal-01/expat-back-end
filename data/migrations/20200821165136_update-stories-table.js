@@ -11,6 +11,9 @@ exports.up = function(knex) {
       .text('content')
       .notNullable();
     stories
+      .datetime('created_at')
+      .defaultTo(knex.fn.now());
+    stories
       .integer('user_id').unsigned().notNullable();
     stories
       .foreign('user_id').references('id').inTable('users');

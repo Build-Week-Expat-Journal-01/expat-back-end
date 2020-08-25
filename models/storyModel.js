@@ -3,12 +3,17 @@ const db = require('../data/dbConfig');
 module.exports = {
   find,
   findById,
+  findByUserId,
   add,
   update,
   remove
 }
 
-function find(user_id) {
+function find() {
+  return db('stories');
+}
+
+function findByUserId(user_id) {
   return db('stories').where({ user_id });
 }
 
@@ -21,7 +26,11 @@ function add(story) {
 }
 
 function update(id, story) {
-  return db('stories').where({ id }).update(story);
+  return db('stories').where({ id }).update({
+    title: story.title,
+    teaser: story.teaser,
+    content: story.content
+  });
 }
 
 function remove(id) {

@@ -36,17 +36,13 @@ router
 
 router
   .route('/:id/photos')
-  .get(authController.authenticate, photoController.readPhotos)
   .post(
     authController.authenticate, 
     storyValidation.validateStoryId,
     photoController.addPhotos
   );
-
 router
   .route('/:id/photos/:pid')
-  .get(authController.authenticate, photoController.readPhotoById)
-  .put(authController.authenticate, photoController.updatePhoto)
   .delete(authController.authenticate, photoController.deletePhoto);
 
 module.exports = router;

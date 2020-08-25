@@ -15,9 +15,21 @@ exports.register = catchAsync(async (req, res, next) => {
   
   const newUser = await User.add(user);
 
+  let token = "";
+
+  if (newUser) {
+    token = generateToken({ id: newUser[0], username: user.username })
+    user.id = newUser[0];
+  };
+
   res.status(201).json({
     status: 'success',
-    message: `Registered successfully. Welcome, ${user.username}.`
+    message: `Registered successfully. Welcome, ${user.username}.`,
+    token,
+    user: {
+      id: newUser ? newUser[0] : undefined,
+      username: user.username
+    } 
   })
 })
 
@@ -29,9 +41,13 @@ exports.login = catchAsync(async (req, res, next) => {
   if (found && bcrypt.compareSync(password, found.password)) {
     const token = generateToken(found);
 
-    res.status(201).json({
-      message: `Welcome, ${found.username}.`,
-      token
+    res.status(200).json({
+      message: `Welcome back, ${found.username}.`,
+      token,
+      user: {
+        id: found.id,
+        username: found.username
+      } 
     })
   } else {
     next({

@@ -28,7 +28,8 @@ function add(photos) {
 
 function update(id, photo) {
   return db('photos').where({ id }).update({
-    image_url: photo.image_url
+    image_url: photo.image_url,
+    desc: photo.desc
   })
 }
 
