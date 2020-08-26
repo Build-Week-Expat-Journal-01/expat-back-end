@@ -1,0 +1,41 @@
+{
+  "name": "build-week-expat-journal-1",
+  "version": "1.0.0",
+  "description": "A blog that allows a user to post his travels in a more professional way.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "cross-env DB_ENV=testing jest --watch --runInBand"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Build-Week-Expat-Journal-01/expat-back-end.git"
+  },
+  "keywords": [],
+  "author": "Lambda School",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Build-Week-Expat-Journal-01/expat-back-end/issues"
+  },
+  "homepage": "https://github.com/Build-Week-Expat-Journal-01/expat-back-end/blob/master/README.md",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.0",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "jest": "^26.4.0",
+    "nodemon": "^2.0.3",
+    "supertest": "^4.0.2"
+  }
+}
