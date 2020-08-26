@@ -89,20 +89,37 @@ exports.updateStory = catchAsync(async (req, res, next) => {
 
       if (photos) {
         let found = null;
-        const existingPhotos = await Photo.findByStoryId(req.params.id);
-        for (let i = 0; i < photos.length; i++) {
-          if (photos[i].id) {
-            found = existingPhotos.find(photo => photo.id === photos[i].id);
-            if (found) await Photo.update(found.id, photos[i])
+        let existingPhotos = await Photo.findByStoryId(req.params.id);
+        
+        for (let i = 0; i < existingPhotos.length; i++) {
+          found = photos.find(photo => photo.id === existingPhotos[i].id);
+          if (found) {
+            await Photo.update(found.id, found)
+          } else {
+            await Photo.remove(existingPhotos[i].id)
+          } 
+        }
+
+        existingPhotos = await Photo.findByStoryId(req.params.id);
+
+        for (let j = 0; j < photos.length; j++) {
+          if (photos[j].id) {
+            if (existingPhotos.find(photo => photo.id !== photos[j].id)) {
+              await Photo.add({ 
+                image_url: photos[j].image_url, 
+                desc: photos[j].desc,
+                story_id: req.params.id 
+              })
+            }
           } else {
             await Photo.add({ 
-              image_url: photos[i].image_url, 
-              desc: photos[i].desc,
+              image_url: photos[j].image_url, 
+              desc: photos[j].desc,
               story_id: req.params.id 
             })
           }
         }
-
+        
         updatedStory.photos = await Photo.findByStoryId(story.id)
       }
 
