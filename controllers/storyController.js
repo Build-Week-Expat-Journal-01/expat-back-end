@@ -47,130 +47,81 @@ exports.readStories = catchAsync(async (req, res, next) => {
 })
 
 exports.readStoryById = catchAsync(async (req, res, next) => {
-  const { subject } = req.decodedJwt;
-
   const story = await Story.findById(req.params.id);
-  
-  if (story) {
-    if (story.user_id === subject) {
-      story.photos = await Photo.findByStoryId(story.id);
 
-      res.status(200).json({
-        status: 'success',
-        story
-      })
-    } else {
-      next({
-        status: 'fail',
-        statusCode: 403,
-        message: 'You are not authorized to see that story.'
-      })
-    }
-  } else {
-    next({
-      status: 'fail',
-      statusCode: 404,
-      message: 'The story is not found.'
-    })
-  }
+  story.photos = await Photo.findByStoryId(story.id)
+
+  res.status(200).json({
+    status: 'success',
+    story
+  })
 })
 
 exports.updateStory = catchAsync(async (req, res, next) => {
-  const { subject } = req.decodedJwt;
+  const { photos, ...restOfTheBody } = req.body;
+  await Story.update(req.params.id, restOfTheBody);
 
-  const story = await Story.findById(req.params.id);
+  const updatedStory = await Story.findById(req.params.id);
 
-  if (story) {
-    if (story.user_id === subject) {
-      const { photos, ...restOfTheBody } = req.body;
-      await Story.update(req.params.id, restOfTheBody);
+  if (photos) {
+    let found = null;
+    let existingPhotos = await Photo.findByStoryId(req.params.id);
+    
+    for (let i = 0; i < existingPhotos.length; i++) {
+      found = photos.find(photo => photo.id === existingPhotos[i].id);
+      if (found) {
+        await Photo.update(found.id, found)
+      } else {
+        await Photo.remove(existingPhotos[i].id)
+      } 
+    }
 
-      const updatedStory = await Story.findById(req.params.id);
+    existingPhotos = await Photo.findByStoryId(req.params.id);
 
-      if (photos) {
-        let found = null;
-        let existingPhotos = await Photo.findByStoryId(req.params.id);
-        
-        for (let i = 0; i < existingPhotos.length; i++) {
-          found = photos.find(photo => photo.id === existingPhotos[i].id);
-          if (found) {
-            await Photo.update(found.id, found)
-          } else {
-            await Photo.remove(existingPhotos[i].id)
-          } 
-        }
-
-        existingPhotos = await Photo.findByStoryId(req.params.id);
-
-        for (let j = 0; j < photos.length; j++) {
-          if (photos[j].id) {
-            if (existingPhotos.find(photo => photo.id !== photos[j].id)) {
-              await Photo.add({ 
-                image_url: photos[j].image_url, 
-                desc: photos[j].desc,
-                story_id: req.params.id 
-              })
-            }
-          } else {
+    for (let j = 0; j < photos.length; j++) {
+      if (photos[j].id) {
+        if (existingPhotos.length > 0) {
+          if (existingPhotos.find(photo => photo.id !== photos[j].id)) {
             await Photo.add({ 
               image_url: photos[j].image_url, 
               desc: photos[j].desc,
               story_id: req.params.id 
             })
-          }
-        }
-        
-        updatedStory.photos = await Photo.findByStoryId(story.id)
+          } 
+        } else {
+          await Photo.add({ 
+            image_url: photos[j].image_url, 
+            desc: photos[j].desc,
+            story_id: req.params.id 
+          })
+        }     
+      } else {
+        await Photo.add({ 
+          image_url: photos[j].image_url, 
+          desc: photos[j].desc,
+          story_id: req.params.id 
+        })
       }
-
-      res.status(200).json({
-        status: 'success',
-        story: updatedStory
-      })
-    } else {
-      next({
-        status: 'fail',
-        statusCode: 403,
-        message: 'You are not authorized to update that story.'
-      })
     }
-  } else {
-    next({
-      status: 'fail',
-      statusCode: 404,
-      message: 'The story is not found.'
-    })
-  }  
+    
+    updatedStory.photos = await Photo.findByStoryId(req.params.id)
+  }
+
+  res.status(200).json({
+    status: 'success',
+    story: updatedStory
+  })
+    
 })
 
 exports.deleteStory = catchAsync(async (req, res, next) => {
-  const { subject } = req.decodedJwt;
-  const story = await Story.findById(req.params.id);
-
-  if (story) {
-    if (story.user_id === subject) {
-      await Photo.removeByStoryId(req.params.id);
-      await Story.remove(req.params.id);
-      res.status(200).json({
-        status: 'success',
-        message: 'The story and its photos have been removed.'
-      })
-    } else {
-      next({
-        status: 'fail',
-        statusCode: 403,
-        message: 'You are not authorized to delete that story.'
-      })
-    }
-  } else {
-    next({
-      status: 'fail',
-      statusCode: 404,
-      message: 'The story is not found.'
-    })
-  }  
+  await Photo.removeByStoryId(req.params.id);
+  await Story.remove(req.params.id);
+  res.status(200).json({
+    status: 'success',
+    message: 'The story and its photos have been removed.'
+  })
 })
-
 
 
 

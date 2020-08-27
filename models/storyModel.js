@@ -22,7 +22,7 @@ function findById(id) {
 }
 
 function add(story) {
-  return db('stories').insert(story);
+  return db('stories').insert(story, 'id');
 }
 
 function update(id, story) {

@@ -8,7 +8,10 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(authController.authenticate, storyController.readStories)
+  .get(
+    authController.authenticate, 
+    storyController.readStories
+  )
   .post(
     authController.authenticate, 
     storyValidation.validateReq, 
@@ -39,10 +42,15 @@ router
   .post(
     authController.authenticate, 
     storyValidation.validateStoryId,
+    storyValidation.validatePhotoReq,
     photoController.addPhotos
   );
 router
   .route('/:id/photos/:pid')
-  .delete(authController.authenticate, photoController.deletePhoto);
+  .delete(
+    authController.authenticate,
+    storyValidation.validateStoryId,
+    photoController.deletePhoto
+  );
 
 module.exports = router;
