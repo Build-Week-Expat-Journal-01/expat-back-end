@@ -12,11 +12,11 @@ function invalidPhotoFields(photo) {
   }
 }
 
-exports.validateReq = catchAsync(async (req, res, next) => {
+exports.validateReq = (req, res, next) => {
   const { title, teaser, content, photos } = req.body
 
   if (!title || !teaser || !content) {
-    next({
+    return next({
       status: 'fail',
       statusCode: 400,
       message: 'Story fields are missing or invalid.'
@@ -33,23 +33,44 @@ exports.validateReq = catchAsync(async (req, res, next) => {
       req.body.photos = false;
     }
 
-    next();
+    return next();
   }
-})
+}
 
 exports.validateStoryId = catchAsync(async (req, res, next) => {
+  const { subject } = req.decodedJwt;
   const id = req.params.id;
 
   const story = await Story.findById(id);
 
   if (story) {
-    next()
+    if (story.user_id === subject) {
+      return next();
+    } else {
+      return next({
+        status: 'fail',
+        statusCode: 403,
+        message: 'You are not authorized.'
+      })
+    }
   } else {
-    next({
+    return next({
       status: 'fail',
       statusCode: 404,
       message: 'Story is not found.'
     })
   }
 });
+
+exports.validatePhotoReq = (req, res, next) => {
+  if (invalidPhotoFields(req.body)) {
+    return next({
+      status: 'fail',
+      statusCode: 400,
+      message: 'Photo fields are missing or invalid.'
+    });
+  } else {
+    return next();
+  }
+};
 

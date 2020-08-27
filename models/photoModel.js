@@ -23,7 +23,7 @@ function findByStoryId(id) {
 }
 
 function add(photos) {
-  return db('photos').insert(photos);
+  return db('photos').insert(photos, 'id');
 }
 
 function update(id, photo) {
