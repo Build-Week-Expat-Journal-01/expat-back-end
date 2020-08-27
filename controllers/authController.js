@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const { promisify } = require('util');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const secrets = require('../config/secrets');
@@ -50,7 +51,7 @@ exports.login = catchAsync(async (req, res, next) => {
       } 
     })
   } else {
-    next({
+    return next({
       status: 'fail',
       statusCode: 401,
       message: 'Invalid username or password.'
@@ -58,30 +59,33 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.authenticate = (req, res, next) => {
+exports.authenticate = catchAsync(async (req, res, next) => {
   let token = null;
+
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
   
   if (token) {
-    jwt.verify(token, secrets.jwtSecret, (err, decodedToken) => {
-      if (err) {
-        next({
-          status: 'fail',
-          statusCode: 403,
-          message: 'You are not authorized.'
-        })
-      } else {
-        req.decodedJwt = decodedToken;
-        next();
-      }
-    })
+    const decodedToken = await promisify(jwt.verify)(token, secrets.jwtSecret);
+    
+    const currentUser = await User.findById(decodedToken.subject);
+
+    if (!currentUser) {
+      return next({
+        status: 'fail',
+        statusCode: 403,
+        message: 'You are not authorized.'
+      })
+    } else {
+      req.decodedJwt = decodedToken;
+      return next();
+    }
   } else {
-    next({
+    return next({
       status: 'fail',
       statusCode: 403,
       message: 'You are not authorized.'
     })
   }
-}
+})
