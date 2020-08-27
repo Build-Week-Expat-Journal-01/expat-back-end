@@ -32,7 +32,7 @@ exports.up = function(knex) {
       stories
         .integer('user_id').unsigned().notNullable();
       stories
-        .foreign('user_id').references('id').inTable('users');
+        .foreign('user_id').references('id').inTable('users').onDelete();
     }),
     knex.schema.createTable('photos', photos => {
       photos.increments();
