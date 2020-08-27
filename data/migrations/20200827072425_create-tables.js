@@ -58,8 +58,8 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return Promise.all([
-    knex.schema.dropTableIfExists('users'),
+    knex.schema.dropTableIfExists('photos'),
     knex.schema.dropTableIfExists('stories'),
-    knex.schema.dropTableIfExists('photos')
+    knex.schema.dropTableIfExists('users')
   ])
 };
