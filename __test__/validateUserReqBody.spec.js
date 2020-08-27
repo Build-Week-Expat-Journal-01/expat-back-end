@@ -31,4 +31,15 @@ describe("validate user request body", () => {
       message: 'Username is NO more than 128 characters.'
     });
   });
+
+  it("there both username and password fields", () => {
+    const next = (obj) => {
+      if (obj) { 
+        return obj 
+      } else { return 'valid' }
+    };
+    let req = {};
+    req.body = { username: 'paulsmith', password: '12345678' };
+    expect(authValidation.validateReq(req, null, next)).toBe('valid');
+  });
 });
